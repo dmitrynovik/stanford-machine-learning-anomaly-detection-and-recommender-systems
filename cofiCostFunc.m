@@ -7,8 +7,7 @@ function [J, grad] = cofiCostFunc(params, Y, R, num_users, num_movies, num_featu
 
 % Unfold the U and W matrices from params
 X = reshape(params(1:num_movies*num_features), num_movies, num_features);
-Theta = reshape(params(num_movies*num_features+1:end), ...
-                num_users, num_features);
+Theta = reshape(params(num_movies*num_features+1:end), num_users, num_features);
 
             
 % You need to return the following values correctly
@@ -39,20 +38,14 @@ Theta_grad = zeros(size(Theta));
 %                     partial derivatives w.r.t. to each element of Theta
 %
 
+% cost function without regularization:
+J = 0.5 * sum(sum((((X * Theta') - Y).^2).*R));
 
+% add regularization to cost function:
+J = J + (0.5 * lambda * sum(sum(Theta.^2))) + (0.5 * lambda * sum(sum(X.^2)));
 
-
-
-
-
-
-
-
-
-
-
-
-
+% theta gradient:
+%Theta_grad = sum(sum(
 
 % =============================================================
 
