@@ -40,13 +40,24 @@ Theta_grad = zeros(size(Theta));
 
 % cost function without regularization:
 J = 0.5 * sum(sum((((X * Theta') - Y).^2).*R));
-
 % add regularization to cost function:
 J = J + (0.5 * lambda * sum(sum(Theta.^2))) + (0.5 * lambda * sum(sum(X.^2)));
 
-% theta gradient:
-%Theta_grad = sum(sum(
+for i = 1:num_movies
+  idx = find(R(i, :) == 1);
+  Theta_temp = Theta(idx, :);
+  Y_temp = Y(i, idx);
+  % regularized gradient:
+  X_grad(i, :) = (X(i, :) * Theta_temp' - Y_temp) * Theta_temp + (lambda * X(i, :));
+end
 
+for j = 1:num_users
+  idx = find(R(:, j) == 1)';
+  X_temp = X(idx, :);
+  Y_temp = Y(idx, j);
+  % regularized gradient:
+  Theta_grad(j, :) = (X_temp * Theta(j, :)' - Y_temp)' * X_temp + (lambda * Theta(j, :));
+end
 % =============================================================
 
 grad = [X_grad(:); Theta_grad(:)];
